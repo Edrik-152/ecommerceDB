@@ -2,12 +2,14 @@ package com.edrik.ecommerceDB.service;
 
 
 import com.edrik.ecommerceDB.dao.OrderDao;
+import com.edrik.ecommerceDB.exception.OrderNotFoundException;
 import com.edrik.ecommerceDB.model.Order;
 import com.edrik.ecommerceDB.model.OrderStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +27,7 @@ public class OrderService {
         order.setCreatedBy(headers.getFirst("createdBy"));
         if(validate(order)){
             order.setId(UUID.randomUUID());
-            order.setOrderedAt(new Date());
+            order.setOrderedAt(Instant.now());
             order.setStatus(OrderStatus.CREATED);
         }
         return dao.createOrder(order);
@@ -44,12 +46,48 @@ public class OrderService {
         return valid;
     }
 
-    public List<Order> getOrder() {
-        return dao.getOrder();
+    public List<Order> getOrders() {
+        return dao.getOrders();
     }
 
     public Order getOrderById(UUID id){
         return dao.getOrderById(id);
     }
 
+    public List<Order> getOrderByName(String name) {
+        return dao.getOrderByName(name);
+    }
+
+    public List<Order> getOrderByDate(Instant date) {
+        return dao.getOrderByDate(date);
+    }
+
+    public List<Order> getOrderByLowPrice(Long price) {
+        return dao.getOrderByLowPrice(price);
+    }
+
+    public List<Order> getOrderByGreaterPrice(Long price) {
+        return dao.getOrderByGreaterPrice(price);
+    }
+
+    public Order updateOrder(UUID id, Order order) {
+        if(dao.getOrderById(id)==null){
+            throw new OrderNotFoundException("OrderNotFound with id:"+id);
+        }
+        return dao.updateOrder(id,order);
+    }
+
+    public Order patchOrder(UUID id, Order order) {
+        if(dao.getOrderById(id)==null){
+            throw new OrderNotFoundException("OrderNotFound with id:"+id);
+        }
+        return dao.patchOrder(id,order);
+    }
+
+    public void deleteOrder(UUID id) {
+        if(dao.getOrderById(id)==null){
+            throw new OrderNotFoundException("OrderNotFound with id:"+id);
+        }
+        dao.deleteOrder(id);
+    }
 }

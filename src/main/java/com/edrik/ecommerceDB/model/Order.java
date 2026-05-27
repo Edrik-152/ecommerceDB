@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,6 +27,6 @@ public class Order {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OrderStatus status;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Date orderedAt;
+    private Instant orderedAt;
     private String createdBy;
 }
