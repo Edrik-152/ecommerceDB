@@ -62,4 +62,8 @@ public class OrderController {
     public void deleteOrder(@PathVariable UUID id){
         service.deleteOrder(id);
     }
+    @GetMapping("/get-order/{obj}")
+    public List<Order> getOrderWithAny(@PathVariable String obj){
+        return service.getOrderWithAny(obj);
+    }
 }

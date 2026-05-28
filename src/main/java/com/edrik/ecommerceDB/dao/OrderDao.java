@@ -2,11 +2,11 @@ package com.edrik.ecommerceDB.dao;
 
 import com.edrik.ecommerceDB.exception.OrderNotFoundException;
 import com.edrik.ecommerceDB.model.Order;
+import com.edrik.ecommerceDB.model.OrderStatus;
 import com.edrik.ecommerceDB.repository.OrderRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -82,5 +82,41 @@ public class OrderDao {
 
     public void deleteOrder(UUID id) {
         repo.deleteById(id);
+    }
+    public List<Order> getId(UUID id) {
+        List<Order> list=List.of(getOrderById(id));
+        if(list.isEmpty()){
+            throw new OrderNotFoundException("OrderNotFound with id:"+id);
+        }
+        return list;
+    }
+    public List<Order> getString(String obj) {
+        List<Order> list=repo.findByorderName(obj);
+        list.addAll(repo.findBycreatedBy(obj));
+        if(list.isEmpty()){
+            throw new OrderNotFoundException("OrderNotFound with String:"+obj);
+        }
+        return list;
+    }
+    public List<Order> getLong(Long obj) {
+        List<Order> list=repo.findByprice(obj);
+        if(list.isEmpty()){
+            throw new OrderNotFoundException("OrderNotFound with price:"+obj);
+        }
+        return list;
+    }
+    public List<Order> getStatus(OrderStatus obj) {
+        List<Order> list=repo.findBystatus(obj);
+        if(list.isEmpty()){
+            throw new OrderNotFoundException("OrderNotFound with status:"+obj);
+        }
+        return list;
+    }
+    public List<Order> getDate(Instant obj) {
+        List<Order> list=repo.findByorderedAt(obj);
+        if(list.isEmpty()){
+            throw new OrderNotFoundException("OrderNotFound with date:"+obj);
+        }
+        return list;
     }
 }

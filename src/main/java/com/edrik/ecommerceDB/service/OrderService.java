@@ -90,4 +90,27 @@ public class OrderService {
         }
         dao.deleteOrder(id);
     }
+    public List<Order> getOrderWithAny(String obj) {
+        try {
+            UUID id=UUID.fromString(obj);
+            return dao.getId(id);
+        } catch (Exception e) {
+        }
+        try{
+            Long price=Long.parseLong(obj);
+            return dao.getLong(price);
+        } catch (Exception e) {
+        }
+        try {
+            OrderStatus status=OrderStatus.valueOf(obj);
+            return dao.getStatus(status);
+        } catch (Exception e) {
+        }
+        try {
+            Instant date=Instant.parse(obj);
+            return dao.getDate(date);
+        } catch (Exception e) {
+        }
+        return dao.getString(obj);
+    }
 }
