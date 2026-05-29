@@ -1,10 +1,14 @@
 package com.edrik.ecommerceDB.service;
 
 
+import com.edrik.ecommerceDB.Dto.OrderDto;
 import com.edrik.ecommerceDB.dao.OrderDao;
 import com.edrik.ecommerceDB.exception.OrderNotFoundException;
+import com.edrik.ecommerceDB.mapper.OrderMapper;
 import com.edrik.ecommerceDB.model.Order;
 import com.edrik.ecommerceDB.model.OrderStatus;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,10 +21,11 @@ import java.util.UUID;
 @Service
 public class OrderService {
     private final OrderDao dao;
+    private final OrderMapper map;
 
-
-    public OrderService(OrderDao dao){
-        this.dao=dao;
+    public OrderService(OrderDao dao, OrderMapper map) {
+        this.dao = dao;
+        this.map = map;
     }
 
     public Order createOrder(Order order, HttpHeaders headers) {
@@ -112,5 +117,25 @@ public class OrderService {
         } catch (Exception e) {
         }
         return dao.getString(obj);
+    }
+
+    public List<Order> getOrderByAny(OrderDto dto) {
+        Order order=map.toOrder(dto);
+        if(order.getOrderName()!=null){
+            return dao.getOrderByName(order.getOrderName());
+        } else if (order.getOrderedAt()!=null) {
+            return dao.getDate(order.getOrderedAt());
+        } else if (order.getId()!=null) {
+            return dao.getId(order.getId());
+        } else if (order.getStatus()!=null) {
+            return dao.getStatus(order.getStatus());
+        } else if (order.getPrice()!=null) {
+            return dao.getLong(order.getPrice());
+        } else if (order.getCreatedBy()!=null) {
+            return dao.getCreatedBy(order.getCreatedBy());
+        }else {
+            throw new OrderNotFoundException("OrderNotFound");
+        }
+
     }
 }

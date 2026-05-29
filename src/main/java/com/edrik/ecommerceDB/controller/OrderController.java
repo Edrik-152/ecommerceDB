@@ -1,6 +1,7 @@
 package com.edrik.ecommerceDB.controller;
 
 
+import com.edrik.ecommerceDB.Dto.OrderDto;
 import com.edrik.ecommerceDB.model.Order;
 import com.edrik.ecommerceDB.service.OrderService;
 import lombok.Data;
@@ -65,5 +66,9 @@ public class OrderController {
     @GetMapping("/get-order/{obj}")
     public List<Order> getOrderWithAny(@PathVariable String obj){
         return service.getOrderWithAny(obj);
+    }
+    @PostMapping("/get-order-by-any")
+    public List<Order> getOrderByAny(@RequestBody OrderDto order){
+        return service.getOrderByAny(order);
     }
 }

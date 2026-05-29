@@ -119,4 +119,7 @@ public class OrderDao {
         }
         return list;
     }
+    public List<Order> getCreatedBy(String obj){
+        return repo.findBycreatedBy(obj);
+    }
 }
